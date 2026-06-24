@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ثانوية بلس | منصة ثانوية عامة مجانية</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container header-inner">
+            <div class="logo">
+                <span class="logo-icon">🎓</span>
+                <div>
+                    <h1>ثانوية بلس</h1>
+                    <p>منصة مجانية 100% لطلاب الثانوية العامة</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <span class="badge-free">مجانًا بالكامل</span>
+                <a href="#teachers" class="btn-ghost">المدرسين</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero / Filters -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-text">
+                <h2>اختار سنتك وشعبتك<br>واحنا نجيبلك <span class="highlight">أفضل المدرسين</span></h2>
+                <p>فيديوهات مجانية، مراجعات ليلة الامتحان، وحل امتحانات - كل المواد</p>
+            </div>
+
+            <div class="filter-card" id="filterCard">
+                <div class="filter-grid">
+                    <div class="field">
+                        <label>السنة الدراسية</label>
+                        <div class="segmented" id="yearSeg">
+                            <button data-year="1">أولى ثانوي</button>
+                            <button data-year="2">تانية ثانوي</button>
+                            <button data-year="3" class="active">تالتة ثانوي</button>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label>الشعبة</label>
+                        <select id="trackSelect" class="select">
+                            <option value="علمي علوم">علمي علوم</option>
+                            <option value="علمي رياضة">علمي رياضة</option>
+                            <option value="أدبي">أدبي</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label>المنطقة / المحافظة</label>
+                        <select id="regionSelect" class="select">
+                            <option>جاري التحميل...</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label>المادة</label>
+                        <select id="subjectSelect" class="select">
+                            <option value="الكل">كل المواد</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filter-actions">
+                    <button class="btn-primary" id="searchBtn">
+                        🔍 اعرض المدرسين
+                    </button>
+                    <span id="resultCount" class="result-count"></span>
+                </div>
+
+                <div class="quick-tags" id="subjectChips"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Teachers Grid -->
+    <main class="container" id="teachers">
+        <div class="section-head">
+            <h3>أفضل مدرسين <span id="currentTrackLabel">علمي علوم - تالتة ثانوي</span></h3>
+            <div class="sort-wrap">
+                <span>ترتيب:</span>
+                <button class="chip active" data-sort="rating">الأعلى تقييمًا</button>
+                <button class="chip" data-sort="students">الأكثر طلابًا</button>
+            </div>
+        </div>
+
+        <div id="teachersGrid" class="teachers-grid">
+            <div class="loading">جاري تحميل أفضل المدرسين...</div>
+        </div>
+    </main>
+
+    <!-- Video Modal -->
+    <div id="videoModal" class="modal hidden">
+        <div class="modal-backdrop" id="modalBackdrop"></div>
+        <div class="modal-box">
+            <button class="modal-close" id="modalClose">✕</button>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-inner">
+            <div>
+                <strong>ثانوية بلس</strong> — منصة مجانية غير ربحية لطلاب الثانوية العامة في مصر<br>
+                كل الفيديوهات من يوتيوب - حقوق الملكية لأصحابها
+            </div>
+            <div class="footer-links">
+                <span>مصنوع بحب لطلاب 2025 / 2026 ❤️</span>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
