@@ -3,296 +3,737 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة ثورة تعليمية - ثانوية عامة</title>
+    <title>منصة ثورة تعليمية</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
-        :root{--primary:#1a237e;--primary-light:#3949ab;--accent:#ffc107;--success:#4caf50;--danger:#f44336;--bg:#f0f2f5;--card:#fff;--text:#333;--light:#666;--border:#e0e0e0;--shadow:0 2px 15px rgba(0,0,0,0.1);--hover:0 8px 25px rgba(0,0,0,0.15);--r:15px;--rs:10px;--t:all 0.3s ease}
+        :root{--primary:#1a237e;--primary-light:#3949ab;--accent:#ffc107;--success:#4caf50;--danger:#f44336;--bg:#f0f2f5;--card:#fff;--text:#333;--light:#666;--border:#e0e0e0;--shadow:0 2px 15px rgba(0,0,0,0.1);--r:15px;--rs:10px;--t:all 0.3s ease}
         body{font-family:'Cairo',sans-serif;background:var(--bg);min-height:100vh;color:var(--text);line-height:1.6}
-        .header{background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 100%);color:#fff;padding:40px 20px;text-align:center;position:relative;overflow:hidden}
-        .header::before{content:'';position:absolute;top:-50%;right:-10%;width:300px;height:300px;background:rgba(255,255,255,0.05);border-radius:50%}
-        .header h1{font-size:2.5rem;font-weight:800;margin-bottom:10px;text-shadow:0 2px 4px rgba(0,0,0,0.2)}
-        .header p{font-size:1.1rem;opacity:0.9}
-        .container{max-width:1200px;margin:0 auto;padding:20px}
-        .selection{background:var(--card);border-radius:var(--r);padding:40px;margin:30px 0;box-shadow:var(--shadow);position:relative}
-        .selection::before{content:'';position:absolute;top:0;right:0;left:0;height:4px;background:linear-gradient(90deg,var(--accent),var(--primary));border-radius:var(--r) var(--r) 0 0}
-        .selection h2{color:var(--primary);margin-bottom:30px;text-align:center;font-size:1.6rem;font-weight:700}
-        .form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:25px}
-        .form-group{display:flex;flex-direction:column}
-        .form-group label{font-weight:700;color:var(--text);margin-bottom:10px;font-size:1rem;display:flex;align-items:center;gap:8px}
-        .form-group label::before{content:'';display:inline-block;width:8px;height:8px;background:var(--accent);border-radius:50%}
-        .form-group select{padding:14px 18px;border:2px solid var(--border);border-radius:var(--rs);font-size:1rem;font-family:'Cairo',sans-serif;transition:var(--t);cursor:pointer;background:#fff;color:var(--text);appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:left 15px center;padding-left:40px}
-        .form-group select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(26,35,126,0.1)}
-        .btn-search{background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 100%);color:#fff;border:none;padding:18px 50px;font-size:1.15rem;border-radius:var(--rs);cursor:pointer;font-family:'Cairo',sans-serif;font-weight:700;margin-top:30px;display:flex;align-items:center;justify-content:center;gap:10px;width:100%;max-width:350px;margin-left:auto;margin-right:auto;transition:var(--t);box-shadow:0 4px 15px rgba(26,35,126,0.3);position:relative;overflow:hidden}
-        .btn-search::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);transition:left 0.5s}
-        .btn-search:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(26,35,126,0.4)}
-        .btn-search:hover::before{left:100%}
-        .btn-icon{font-size:1.3rem}
-        .loading{display:none;text-align:center;padding:50px;flex-direction:column;align-items:center;gap:20px}
-        .loading.active{display:flex}
-        .spinner{width:50px;height:50px;border:4px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin 1s linear infinite}
+        .hidden{display:none !important}
+
+        /* Auth Pages */
+        .auth-page{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 100%)}
+        .auth-box{background:#fff;border-radius:var(--r);padding:40px;width:100%;max-width:450px;box-shadow:0 20px 60px rgba(0,0,0,0.3)}
+        .auth-box h1{color:var(--primary);text-align:center;margin-bottom:10px;font-size:1.8rem}
+        .auth-box .subtitle{color:var(--light);text-align:center;margin-bottom:30px;font-size:0.95rem}
+        .form-group{margin-bottom:20px}
+        .form-group label{display:block;color:var(--text);font-weight:600;margin-bottom:8px;font-size:0.95rem}
+        .form-group input,.form-group select{width:100%;padding:14px 18px;border:2px solid var(--border);border-radius:var(--rs);font-size:1rem;font-family:'Cairo',sans-serif;transition:var(--t)}
+        .form-group input:focus,.form-group select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(26,35,126,0.1)}
+        .btn-primary{background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 100%);color:#fff;border:none;padding:16px;width:100%;border-radius:var(--rs);font-size:1.1rem;font-family:'Cairo',sans-serif;font-weight:700;cursor:pointer;transition:var(--t);margin-top:10px}
+        .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(26,35,126,0.3)}
+        .btn-primary:disabled{opacity:0.6;cursor:not-allowed;transform:none}
+        .auth-link{text-align:center;margin-top:20px;color:var(--light)}
+        .auth-link a{color:var(--primary);text-decoration:none;font-weight:700}
+        .error{color:var(--danger);font-size:0.85rem;margin-top:5px;text-align:center;display:none}
+        .success{color:var(--success);font-size:0.85rem;margin-top:5px;text-align:center;display:none}
+        .loading{text-align:center;margin-top:15px;display:none}
+        .spinner{width:30px;height:30px;border:3px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin 1s linear infinite;display:inline-block}
         @keyframes spin{to{transform:rotate(360deg)}}
-        .loading p{color:var(--light);font-size:1.1rem}
-        .results{display:none;animation:fadeIn 0.5s ease}
-        .results.active{display:block}
-        @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-        .results-header{display:flex;justify-content:space-between;align-items:center;margin:40px 0 20px;flex-wrap:wrap;gap:10px}
-        .section-title{color:var(--primary);font-size:1.5rem;font-weight:700;padding-right:15px;border-right:4px solid var(--accent)}
-        .results-count{background:var(--primary);color:#fff;padding:5px 15px;border-radius:20px;font-size:0.9rem;font-weight:600}
-        .teachers-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:25px}
-        .teacher-card{background:var(--card);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow);transition:var(--t);cursor:pointer;position:relative}
-        .teacher-card::before{content:'';position:absolute;top:0;right:0;width:0;height:4px;background:linear-gradient(90deg,var(--accent),var(--primary));transition:width 0.3s ease}
-        .teacher-card:hover{transform:translateY(-8px);box-shadow:var(--hover)}
-        .teacher-card:hover::before{width:100%;left:0}
-        .teacher-header{background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 100%);color:#fff;padding:25px;position:relative}
-        .teacher-name{font-size:1.3rem;font-weight:700;margin-bottom:5px}
-        .teacher-subject{font-size:0.95rem;opacity:0.9;font-weight:600}
-        .teacher-rating{position:absolute;left:20px;top:50%;transform:translateY(-50%);background:var(--accent);color:#1a237e;padding:6px 14px;border-radius:20px;font-weight:800;font-size:0.95rem;box-shadow:0 2px 8px rgba(0,0,0,0.2)}
-        .teacher-body{padding:25px}
-        .teacher-info{display:flex;align-items:center;gap:10px;margin-bottom:12px;color:var(--light);font-size:0.95rem}
-        .teacher-stats{display:flex;gap:15px;margin-top:20px;padding-top:20px;border-top:2px solid var(--bg)}
-        .stat{text-align:center;flex:1;padding:10px;background:var(--bg);border-radius:var(--rs);transition:var(--t)}
-        .stat:hover{background:rgba(26,35,126,0.05)}
-        .stat-value{font-weight:800;color:var(--primary);font-size:1.2rem}
-        .stat-label{font-size:0.8rem;color:var(--light);margin-top:4px}
-        .btn-videos{background:linear-gradient(135deg,var(--success) 0%,#45a049 100%);color:#fff;border:none;padding:12px 24px;border-radius:var(--rs);cursor:pointer;font-family:'Cairo',sans-serif;font-weight:700;margin-top:20px;width:100%;transition:var(--t);font-size:1rem;display:flex;align-items:center;justify-content:center;gap:8px}
-        .btn-videos:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(76,175,80,0.3)}
-        .videos-section{display:none;background:var(--card);border-radius:var(--r);padding:30px;margin-top:30px;box-shadow:var(--shadow);animation:fadeIn 0.5s ease}
+
+        /* Navbar */
+        .navbar{background:var(--primary);color:#fff;padding:15px 30px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100}
+        .navbar h1{font-size:1.3rem}
+        .navbar .user{display:flex;align-items:center;gap:15px}
+        .btn-logout{background:rgba(255,255,255,0.2);color:#fff;border:none;padding:8px 20px;border-radius:8px;cursor:pointer;font-family:'Cairo',sans-serif;transition:var(--t)}
+        .btn-logout:hover{background:rgba(255,255,255,0.3)}
+
+        /* Main Content */
+        .container{max-width:1200px;margin:0 auto;padding:30px}
+        .welcome{background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 100%);color:#fff;padding:30px;border-radius:var(--r);margin-bottom:30px;box-shadow:0 4px 15px rgba(0,0,0,0.15)}
+        .welcome h2{font-size:1.5rem;margin-bottom:10px}
+        .status-badge{display:inline-block;padding:5px 15px;border-radius:20px;font-size:0.85rem;font-weight:600;margin-top:10px}
+        .status-pending{background:var(--accent);color:#333}
+        .status-active{background:var(--success);color:#fff}
+        .status-admin{background:#9c27b0;color:#fff}
+
+        /* Selection */
+        .selection{background:var(--card);border-radius:var(--r);padding:30px;margin-bottom:30px;box-shadow:var(--shadow)}
+        .selection h3{color:var(--primary);margin-bottom:20px}
+        .form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px}
+        .btn-search{background:var(--primary);color:#fff;border:none;padding:15px 40px;border-radius:var(--rs);cursor:pointer;font-family:'Cairo',sans-serif;font-weight:700;font-size:1rem;margin-top:20px;transition:var(--t)}
+        .btn-search:hover{background:var(--primary-light);transform:translateY(-2px)}
+
+        /* Cards */
+        .teachers-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
+        .teacher-card{background:var(--card);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow);transition:var(--t);cursor:pointer}
+        .teacher-card:hover{transform:translateY(-5px);box-shadow:0 8px 25px rgba(0,0,0,0.15)}
+        .teacher-header{background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 100%);color:#fff;padding:20px;position:relative}
+        .teacher-name{font-weight:700;font-size:1.1rem}
+        .teacher-subject{font-size:0.9rem;opacity:0.9}
+        .teacher-rating{position:absolute;left:15px;top:50%;transform:translateY(-50%);background:var(--accent);color:#333;padding:5px 12px;border-radius:20px;font-weight:700;font-size:0.85rem}
+        .teacher-body{padding:20px}
+        .teacher-info{display:flex;align-items:center;gap:8px;margin-bottom:8px;color:var(--light);font-size:0.9rem}
+        .teacher-stats{display:flex;gap:10px;margin-top:15px;padding-top:15px;border-top:2px solid var(--bg)}
+        .stat{text-align:center;flex:1;padding:10px;background:var(--bg);border-radius:var(--rs)}
+        .stat-value{font-weight:800;color:var(--primary);font-size:1.1rem}
+        .stat-label{font-size:0.75rem;color:var(--light)}
+        .btn-videos{background:var(--success);color:#fff;border:none;padding:10px 20px;border-radius:var(--rs);cursor:pointer;font-family:'Cairo',sans-serif;font-weight:600;width:100%;margin-top:15px}
+        .btn-videos:hover{background:#45a049}
+
+        /* Videos */
+        .videos-section{display:none;background:var(--card);border-radius:var(--r);padding:25px;margin-top:20px;box-shadow:var(--shadow)}
         .videos-section.active{display:block}
-        .videos-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px;flex-wrap:wrap;gap:15px;padding-bottom:15px;border-bottom:2px solid var(--bg)}
-        .videos-header h3{color:var(--primary);font-size:1.3rem;font-weight:700}
-        .btn-close{background:var(--danger);color:#fff;border:none;padding:10px 20px;border-radius:var(--rs);cursor:pointer;font-family:'Cairo',sans-serif;font-weight:600;display:flex;align-items:center;gap:6px;transition:var(--t)}
-        .btn-close:hover{background:#d32f2f;transform:translateY(-2px)}
-        .videos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:25px}
-        .video-card{border-radius:var(--rs);overflow:hidden;box-shadow:var(--shadow);transition:var(--t);background:var(--card)}
-        .video-card:hover{transform:translateY(-5px);box-shadow:var(--hover)}
-        .video-wrapper{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;background:#000}
+        .videos-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+        .btn-close{background:var(--danger);color:#fff;border:none;padding:8px 16px;border-radius:var(--rs);cursor:pointer;font-family:'Cairo',sans-serif}
+        .videos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
+        .video-card{border-radius:var(--rs);overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+        .video-wrapper{position:relative;padding-bottom:56.25%;height:0;background:#000}
         .video-wrapper iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}
-        .video-info{padding:18px}
-        .video-title{font-weight:700;color:var(--text);font-size:1rem;line-height:1.5}
-        .video-subject{color:var(--light);font-size:0.85rem;margin-top:6px;display:flex;align-items:center;gap:5px}
-        .no-results{text-align:center;padding:60px 20px;color:var(--light);font-size:1.2rem;background:var(--card);border-radius:var(--r);box-shadow:var(--shadow)}
-        .no-results-icon{font-size:4rem;margin-bottom:15px;display:block}
-        .footer{background:#0d1642;color:#fff;text-align:center;padding:30px 20px;margin-top:50px}
-        .footer p{font-size:1rem;margin-bottom:8px}
-        .footer-sub{font-size:0.9rem;opacity:0.8}
-        .scroll-top{position:fixed;bottom:30px;left:30px;width:50px;height:50px;background:var(--primary);color:#fff;border:none;border-radius:50%;cursor:pointer;font-size:1.5rem;display:none;align-items:center;justify-content:center;box-shadow:var(--shadow);transition:var(--t);z-index:1000}
-        .scroll-top:hover{background:var(--primary-light);transform:translateY(-3px)}
-        .scroll-top.visible{display:flex}
-        @media(max-width:768px){.header h1{font-size:1.8rem}.form-grid{grid-template-columns:1fr}.teachers-grid,.videos-grid{grid-template-columns:1fr}.teacher-rating{position:static;transform:none;margin-top:10px;display:inline-block}}
+        .video-info{padding:15px}
+        .video-title{font-weight:600;font-size:0.9rem}
+
+        /* Admin */
+        .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;margin-bottom:30px}
+        .stat-card{background:var(--card);padding:20px;border-radius:var(--r);box-shadow:var(--shadow);text-align:center}
+        .stat-card .value{font-size:2rem;font-weight:800;color:var(--primary)}
+        .stat-card .label{color:var(--light);font-size:0.9rem}
+        .section-card{background:var(--card);border-radius:var(--r);padding:25px;margin-bottom:20px;box-shadow:var(--shadow)}
+        .section-card h3{color:var(--primary);margin-bottom:15px;font-size:1.2rem}
+        table{width:100%;border-collapse:collapse}
+        th,td{padding:12px;text-align:right;border-bottom:1px solid #eee}
+        th{background:var(--bg);color:var(--primary);font-weight:700}
+        tr:hover{background:#f9f9f9}
+        .badge{padding:5px 12px;border-radius:20px;font-size:0.8rem;font-weight:600}
+        .badge-student{background:#e3f2fd;color:#1565c0}
+        .badge-teacher{background:#fff3e0;color:#e65100}
+        .badge-admin{background:#f3e5f5;color:#7b1fa2}
+        .badge-pending{background:#ffebee;color:#c62828}
+        .badge-active{background:#e8f5e9;color:#2e7d32}
+        .btn-small{padding:6px 12px;border:none;border-radius:6px;cursor:pointer;font-family:'Cairo',sans-serif;font-size:0.8rem;margin:2px}
+        .btn-approve{background:var(--success);color:#fff}
+        .btn-reject{background:var(--danger);color:#fff}
+        .btn-delete{background:#757575;color:#fff}
+
+        /* Teacher Dashboard */
+        .video-list{display:grid;gap:10px}
+        .video-item{background:#f9f9f9;padding:15px;border-radius:var(--rs);display:flex;justify-content:space-between;align-items:center}
+        .video-item .title{font-weight:600}
+        .video-item .url{color:var(--light);font-size:0.8rem}
+        .btn-add{background:var(--success);color:#fff;border:none;padding:10px 20px;border-radius:var(--rs);cursor:pointer;font-family:'Cairo',sans-serif;margin-bottom:15px}
+        .alert{padding:15px;border-radius:var(--rs);margin-bottom:20px}
+        .alert-warning{background:#fff3e0;color:#e65100}
+        .alert-success{background:#e8f5e9;color:#2e7d32}
+
+        .no-results{text-align:center;padding:40px;color:var(--light)}
+        .no-results-icon{font-size:3rem;margin-bottom:10px}
+
+        @media(max-width:768px){.navbar{flex-direction:column;gap:10px}.form-grid{grid-template-columns:1fr}.teachers-grid,.videos-grid{grid-template-columns:1fr}}
     </style>
 <base target="_blank">
 </head>
 <body>
-    <header class="header">
-        <h1>📚 منصة ثورة تعليمية</h1>
-        <p>أفضل المدرسين ومشاهدة الفيديوهات التعليمية مجاناً لطلاب الثانوية العامة</p>
-    </header>
-    <div class="container">
-        <section class="selection">
-            <h2>🔍 اختر بياناتك الدراسية</h2>
-            <div class="form-grid">
+    <!-- ==================== LOGIN PAGE ==================== -->
+    <div id="page-login" class="auth-page">
+        <div class="auth-box">
+            <h1>📚 تسجيل الدخول</h1>
+            <p class="subtitle">أهلاً بك في منصة ثورة تعليمية</p>
+            <form id="loginForm">
                 <div class="form-group">
-                    <label>السنة الدراسية</label>
-                    <select id="year">
-                        <option value="">-- اختر السنة --</option>
-                        <option value="first">أولى ثانوي</option>
-                        <option value="second">ثانية ثانوي</option>
-                        <option value="third">ثالثة ثانوي</option>
-                    </select>
+                    <label>البريد الإلكتروني</label>
+                    <input type="email" id="loginEmail" placeholder="example@email.com" required>
                 </div>
                 <div class="form-group">
-                    <label>الشعبة</label>
-                    <select id="branch">
-                        <option value="">-- اختر الشعبة --</option>
-                        <option value="scientific">الشعبة العلمية</option>
-                        <option value="literary">الشعبة الأدبية</option>
-                    </select>
+                    <label>كلمة المرور</label>
+                    <input type="password" id="loginPassword" placeholder="********" required>
                 </div>
-                <div class="form-group">
-                    <label>المنطقة</label>
-                    <select id="region">
-                        <option value="">-- اختر المنطقة --</option>
-                        <option value="cairo">القاهرة</option>
-                        <option value="alex">الإسكندرية</option>
-                        <option value="giza">الجيزة</option>
-                        <option value="mansoura">المنصورة</option>
-                        <option value="tanta">طنطا</option>
-                        <option value="online">أونلاين (عبر الإنترنت)</option>
-                    </select>
-                </div>
-            </div>
-            <button class="btn-search" id="btnSearch">
-                <span class="btn-icon">🔍</span>
-                <span>ابحث عن أفضل المدرسين</span>
-            </button>
-        </section>
-        <div class="loading" id="loading">
-            <div class="spinner"></div>
-            <p>جاري البحث...</p>
+                <button type="submit" class="btn-primary" id="btnLogin">تسجيل الدخول</button>
+                <div class="loading" id="loginLoading"><div class="spinner"></div><p style="margin-top:10px;color:#666">جاري تسجيل الدخول...</p></div>
+                <div class="error" id="loginError"></div>
+            </form>
+            <div class="auth-link">مش عندك حساب؟ <a href="#" onclick="showPage('register')">إنشاء حساب جديد</a></div>
         </div>
-        <section class="results" id="resultsSection">
-            <div class="results-header">
-                <h2 class="section-title">⭐ أفضل المدرسين</h2>
-                <span class="results-count" id="resultsCount"></span>
-            </div>
-            <div class="teachers-grid" id="teachersGrid"></div>
-        </section>
-        <section class="videos-section" id="videosSection">
-            <div class="videos-header">
-                <h3 id="videosTitle">🎬 فيديوهات المدرس</h3>
-                <button class="btn-close" id="btnCloseVideos">✕ إغلاق</button>
-            </div>
-            <div class="videos-grid" id="videosGrid"></div>
-        </section>
     </div>
-    <footer class="footer">
-        <p>منصة ثورة تعليمية © 2026 - لطلاب الثانوية العامة</p>
-        <p class="footer-sub">جميع الفيديوهات مجانية 100% للطلاب</p>
-    </footer>
+
+    <!-- ==================== REGISTER PAGE ==================== -->
+    <div id="page-register" class="auth-page hidden">
+        <div class="auth-box">
+            <h1>📚 إنشاء حساب جديد</h1>
+            <p class="subtitle">انضم لمنصة ثورة تعليمية مجاناً</p>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label>الاسم الكامل</label>
+                    <input type="text" id="regName" placeholder="اكتب اسمك الكامل" required>
+                </div>
+                <div class="form-group">
+                    <label>البريد الإلكتروني</label>
+                    <input type="email" id="regEmail" placeholder="example@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label>كلمة المرور</label>
+                    <input type="password" id="regPassword" placeholder="6 أحرف على الأقل" required minlength="6">
+                </div>
+                <div class="form-group">
+                    <label>نوع الحساب</label>
+                    <select id="regRole" required>
+                        <option value="">-- اختر نوع الحساب --</option>
+                        <option value="student">🎓 طالب</option>
+                        <option value="teacher">👨‍🏫 مدرس</option>
+                    </select>
+                </div>
+                <div class="form-group hidden" id="teacherFields">
+                    <label>المادة التي تدرسها</label>
+                    <select id="regSubject">
+                        <option value="">-- اختر المادة --</option>
+                        <option value="رياضيات">رياضيات</option>
+                        <option value="فيزياء">فيزياء</option>
+                        <option value="كيمياء">كيمياء</option>
+                        <option value="أحياء">أحياء</option>
+                        <option value="تاريخ">تاريخ</option>
+                        <option value="جغرافيا">جغرافيا</option>
+                        <option value="فلسفة">فلسفة</option>
+                        <option value="علم نفس">علم نفس</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary" id="btnRegister">إنشاء حساب</button>
+                <div class="loading" id="regLoading"><div class="spinner"></div><p style="margin-top:10px;color:#666">جاري إنشاء الحساب...</p></div>
+                <div class="error" id="regError"></div>
+                <div class="success" id="regSuccess"></div>
+            </form>
+            <div class="auth-link">عندك حساب بالفعل؟ <a href="#" onclick="showPage('login')">سجل دخول من هنا</a></div>
+        </div>
+    </div>
+
+    <!-- ==================== MAIN APP (Navbar + Content) ==================== -->
+    <div id="page-app" class="hidden">
+        <nav class="navbar">
+            <h1>📚 منصة ثورة تعليمية</h1>
+            <div class="user">
+                <span id="userName">مستخدم</span>
+                <span id="userRole" class="badge"></span>
+                <button class="btn-logout" onclick="logout()">🚪 خروج</button>
+            </div>
+        </nav>
+
+        <div class="container" id="appContent">
+            <!-- Content will be loaded here based on role -->
+        </div>
+    </div>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
     <script>
-        const teachersData=[
-            {id:1,name:"أ/ أحمد سرور (يلا نفهم Math)",subject:"الرياضيات",year:"first",branch:"scientific",region:"cairo",rating:4.9,students:940,experience:"خبرة 15 سنة",regionName:"القاهرة",channel:"https://www.youtube.com/@مستر-احمد-سرور",videos:[{title:"تقسيم قطعة مستقيمة بالكامل | رياضيات أولى ثانوي",embed:"https://www.youtube.com/embed/ARZjVbVFn1w"},{title:"مراجعة حساب مثلثات كاملا أولي ثانوي",embed:"https://www.youtube.com/embed/HpVsGw3O0dQ"},{title:"Full Algebra Review for 1st Year Secondary",embed:"https://www.youtube.com/embed/0DzjjOAQVJw"}]},
-            {id:2,name:"أ/ محمد عبدالمعبود",subject:"الفيزياء",year:"first",branch:"scientific",region:"alex",rating:4.9,students:1350,experience:"خبرة 12 سنة",regionName:"الإسكندرية",channel:"https://www.youtube.com/@mr.abdelmaaboud",videos:[{title:"First Physics Lecture 2026",embed:"https://www.youtube.com/embed/9xnaMi44J6U"},{title:"مراجعة الفصل الأول | الفيزياء 2024",embed:"https://www.youtube.com/embed/-RgKnOSuaxY"},{title:"الكورس التأسيسي - جزء الفيزياء",embed:"https://www.youtube.com/embed/JKv6b-xFKOM"}]},
-            {id:3,name:"د/ سامح إبراهيم",subject:"الكيمياء",year:"first",branch:"scientific",region:"online",rating:4.8,students:748,experience:"خبرة 10 سنوات",regionName:"أونلاين",channel:"https://www.youtube.com/@Chemist_SamehIbrahiem",videos:[{title:"شرح الباب الأول العناصر الانتقالية 2026",embed:"https://www.youtube.com/embed/RUhI-C60P9c"},{title:"الكيمياء التحليلية الباب الثاني 2026",embed:"https://www.youtube.com/embed/ulIqDPBTzNQ"},{title:"Superior Levels First Lecture 2026",embed:"https://www.youtube.com/embed/rOgon9Cb9d8"}]},
-            {id:4,name:"د/ يحي عبدالدايم",subject:"الأحياء",year:"first",branch:"scientific",region:"giza",rating:4.8,students:500,experience:"خبرة 8 سنوات",regionName:"الجيزة",channel:"https://www.youtube.com/@DrYahiaAbdeldaiem",videos:[{title:"معرفة أسماء العظام | أحياء 3 ثانوي",embed:"https://www.youtube.com/embed/wcRtL8iikbA"},{title:"الوحدة الحركية - الدعامة والحركة",embed:"https://www.youtube.com/embed/L4SCljZrI-w"},{title:"شرح أحياء + جيولوجيا (نظام جديد)",embed:"https://www.youtube.com/embed/Ae17ps0Hzoo"}]},
-            {id:5,name:"أ/ الباشا محمد سعد",subject:"التاريخ",year:"first",branch:"literary",region:"cairo",rating:4.9,students:324,experience:"خبرة 14 سنة",regionName:"القاهرة",channel:"https://www.youtube.com/@ElPasha-الباشا",videos:[{title:"تاريخ ٣ ثانوي ٢٠٢٦ - شرح الفصل الثاني 1",embed:"https://www.youtube.com/embed/g_qSSCubVbk"},{title:"مراجعة الفصل الأول والثاني تاريخ",embed:"https://www.youtube.com/embed/hxEfwW-Od5o"},{title:"تاريخ ٣ ثانوي ٢٠٢٦ - شرح الفصل الأول 2",embed:"https://www.youtube.com/embed/PQMJOICennw"}]},
-            {id:6,name:"أ/ نادر جورج",subject:"الفلسفة والتاريخ",year:"first",branch:"literary",region:"alex",rating:4.8,students:200,experience:"خبرة 11 سنة",regionName:"الإسكندرية",channel:"https://www.youtube.com/@mrnadergeorge",videos:[{title:"فض اشتباك | تاريخ أولي ثانوي",embed:"https://www.youtube.com/embed/pggD6fRJVq8"},{title:"مراجعه تاريخ أولى ثانوي الترم الثاني 2026",embed:"https://www.youtube.com/embed/9xnaMi44J6U"},{title:"مراجعه فلسفه أولي ثانوي الترم الثاني",embed:"https://www.youtube.com/embed/-RgKnOSuaxY"}]},
-            {id:7,name:"أ/ أحمد سرور (يلا نفهم Math)",subject:"الرياضيات",year:"second",branch:"scientific",region:"mansoura",rating:4.9,students:940,experience:"خبرة 16 سنة",regionName:"المنصورة",channel:"https://www.youtube.com/@مستر-احمد-سرور",videos:[{title:"Solving Sample Test 9 (Pure Mathematics) 2026",embed:"https://www.youtube.com/embed/379O5NZ64YY"},{title:"Foundation of Third Secondary Mathematics - Lecture 1",embed:"https://www.youtube.com/embed/ARZjVbVFn1w"},{title:"خطة يلا نفهم math + المرحلة الاعدادية 2025",embed:"https://www.youtube.com/embed/0DzjjOAQVJw"}]},
-            {id:8,name:"أ/ محمد عبدالمعبود",subject:"الفيزياء",year:"second",branch:"scientific",region:"online",rating:4.9,students:1350,experience:"خبرة 13 سنة",regionName:"أونلاين",channel:"https://www.youtube.com/@mr.abdelmaaboud",videos:[{title:"المحاضرة الأولى في الفيزياء تانية ثانوي",embed:"https://www.youtube.com/embed/joHiK5oZ1pI"},{title:"التيار الكهربي | محاضرتنا الأولى 2026",embed:"https://www.youtube.com/embed/8Ha1l5BNwuA"},{title:"First Physics Lecture 2026",embed:"https://www.youtube.com/embed/9xnaMi44J6U"}]},
-            {id:9,name:"أ/ حسام إبراهيم",subject:"الكيمياء",year:"second",branch:"scientific",region:"tanta",rating:4.7,students:300,experience:"خبرة 9 سنوات",regionName:"طنطا",channel:"https://www.youtube.com/@Mr.Hossam_Ibrahim",videos:[{title:"الكيمياء العضوية في جيبك | مراجعة نص المنهج",embed:"https://www.youtube.com/embed/J00mvQHGo4o"},{title:"مفيش امتحان كيميا بيخلو من الأفكار دي!",embed:"https://www.youtube.com/embed/RUhI-C60P9c"},{title:"How to Study for Your Final Exam Review",embed:"https://www.youtube.com/embed/ulIqDPBTzNQ"}]},
-            {id:10,name:"أ/ نادر جورج",subject:"الفلسفة",year:"second",branch:"literary",region:"cairo",rating:4.8,students:200,experience:"خبرة 12 سنة",regionName:"القاهرة",channel:"https://www.youtube.com/@mrnadergeorge",videos:[{title:"مراجعه فلسفه تانية ثانوي الترم الثاني 2026",embed:"https://www.youtube.com/embed/pggD6fRJVq8"},{title:"فض اشتباك | فلسفة تانية ثانوي",embed:"https://www.youtube.com/embed/9xnaMi44J6U"},{title:"منهجك كامل في ساعتين | فلسفة تانية ثانوي",embed:"https://www.youtube.com/embed/-RgKnOSuaxY"}]},
-            {id:11,name:"أ/ الباشا محمد سعد",subject:"التاريخ",year:"second",branch:"literary",region:"giza",rating:4.8,students:324,experience:"خبرة 10 سنوات",regionName:"الجيزة",channel:"https://www.youtube.com/@ElPasha-الباشا",videos:[{title:"تاريخ ٣ ثانوي ٢٠٢٦ - شرح الفصل الثاني 1",embed:"https://www.youtube.com/embed/g_qSSCubVbk"},{title:"مراجعة الفصل الأول والثاني تاريخ",embed:"https://www.youtube.com/embed/hxEfwW-Od5o"},{title:"منهجك كامل في ساعتين | تاريخ تانية ثانوي",embed:"https://www.youtube.com/embed/PQMJOICennw"}]},
-            {id:12,name:"أ/ أحمد سرور (يلا نفهم Math)",subject:"الرياضيات",year:"third",branch:"scientific",region:"cairo",rating:5.0,students:940,experience:"خبرة 20 سنة",regionName:"القاهرة",channel:"https://www.youtube.com/@مستر-احمد-سرور",videos:[{title:"كورس تأسيس الرياضيات الصف الثالث الثانوي 2025",embed:"https://www.youtube.com/embed/379O5NZ64YY"},{title:"Solving Sample Test 9 (Pure Mathematics) 2026",embed:"https://www.youtube.com/embed/ARZjVbVFn1w"},{title:"خطة يلا نفهم math + المرحلة الاعدادية",embed:"https://www.youtube.com/embed/0DzjjOAQVJw"},{title:"Full Algebra Review for 3rd Year Secondary",embed:"https://www.youtube.com/embed/HpVsGw3O0dQ"}]},
-            {id:13,name:"أ/ محمد عبدالمعبود",subject:"الفيزياء",year:"third",branch:"scientific",region:"alex",rating:4.9,students:1350,experience:"خبرة 17 سنة",regionName:"الإسكندرية",channel:"https://www.youtube.com/@mr.abdelmaaboud",videos:[{title:"مراجعة الفصل الأول | الفيزياء 2024",embed:"https://www.youtube.com/embed/-RgKnOSuaxY"},{title:"First Physics Lecture 2026",embed:"https://www.youtube.com/embed/9xnaMi44J6U"},{title:"التيار الكهربي | محاضرتنا الأولى 2026",embed:"https://www.youtube.com/embed/8Ha1l5BNwuA"}]},
-            {id:14,name:"د/ سامح إبراهيم",subject:"الكيمياء",year:"third",branch:"scientific",region:"online",rating:4.8,students:748,experience:"خبرة 15 سنة",regionName:"أونلاين",channel:"https://www.youtube.com/@Chemist_SamehIbrahiem",videos:[{title:"شرح الباب الأول العناصر الانتقالية 2026",embed:"https://www.youtube.com/embed/RUhI-C60P9c"},{title:"الكيمياء التحليلية الباب الثاني 2026",embed:"https://www.youtube.com/embed/ulIqDPBTzNQ"},{title:"حل واجب الأزهر | كيمياء 3ثانوي 2026",embed:"https://www.youtube.com/embed/rOgon9Cb9d8"}]},
-            {id:15,name:"د/ يحي عبدالدايم",subject:"الأحياء",year:"third",branch:"scientific",region:"mansoura",rating:4.7,students:500,experience:"خبرة 11 سنة",regionName:"المنصورة",channel:"https://www.youtube.com/@DrYahiaAbdeldaiem",videos:[{title:"أحياء 3 ثانوي - DNA | الفيديو (1)",embed:"https://www.youtube.com/embed/wcRtL8iikbA"},{title:"الوحدة الحركية - الدعامة والحركة",embed:"https://www.youtube.com/embed/L4SCljZrI-w"},{title:"معرفة أسماء العظام | أحياء 3 ثانوي",embed:"https://www.youtube.com/embed/Ae17ps0Hzoo"}]},
-            {id:16,name:"أ/ الباشا محمد سعد",subject:"التاريخ",year:"third",branch:"literary",region:"cairo",rating:4.9,students:324,experience:"خبرة 18 سنة",regionName:"القاهرة",channel:"https://www.youtube.com/@ElPasha-الباشا",videos:[{title:"تاريخ ٣ ثانوي ٢٠٢٦ - شرح الفصل الأول 2",embed:"https://www.youtube.com/embed/PQMJOICennw"},{title:"تاريخ ٣ ثانوي ٢٠٢٦ - شرح الفصل الثاني 1",embed:"https://www.youtube.com/embed/g_qSSCubVbk"},{title:"مراجعة الفصل الأول والثاني تاريخ",embed:"https://www.youtube.com/embed/hxEfwW-Od5o"}]},
-            {id:17,name:"أ/ نادر جورج",subject:"التاريخ والفلسفة",year:"third",branch:"literary",region:"tanta",rating:4.6,students:200,experience:"خبرة 10 سنوات",regionName:"طنطا",channel:"https://www.youtube.com/@mrnadergeorge",videos:[{title:"فض اشتباك | تاريخ ثالثة ثانوي",embed:"https://www.youtube.com/embed/pggD6fRJVq8"},{title:"مراجعه تاريخ ثالثة ثانوي الترم الثاني 2026",embed:"https://www.youtube.com/embed/9xnaMi44J6U"},{title:"منهجك كامل في ساعتين | تاريخ ثالثة ثانوي",embed:"https://www.youtube.com/embed/-RgKnOSuaxY"}]},
-            {id:18,name:"أ/ نادر جورج",subject:"الفلسفة",year:"third",branch:"literary",region:"online",rating:4.8,students:200,experience:"خبرة 14 سنة",regionName:"أونلاين",channel:"https://www.youtube.com/@mrnadergeorge",videos:[{title:"مراجعه فلسفه ثالثة ثانوي الترم الثاني 2026",embed:"https://www.youtube.com/embed/pggD6fRJVq8"},{title:"فض اشتباك | فلسفة ثالثة ثانوي",embed:"https://www.youtube.com/embed/9xnaMi44J6U"},{title:"منهجك كامل في ساعتين | فلسفة ثالثة ثانوي",embed:"https://www.youtube.com/embed/-RgKnOSuaxY"}]}
-        ];
+        // ==================== FIREBASE CONFIG ====================
+        const firebaseConfig = {
+            apiKey: "AIzaSyC_8kzOOWQINZv_URN2ey7OylGLULgnvko",
+            authDomain: "thawra-education.firebaseapp.com",
+            databaseURL: "https://thawra-education-default-rtdb.firebaseio.com",
+            projectId: "thawra-education",
+            storageBucket: "thawra-education.firebasestorage.app",
+            messagingSenderId: "994177128359",
+            appId: "1:994177128359:web:47447da7e608497418c882",
+            measurementId: "G-8CMWS8KPP1"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
 
-        const yearSelect=document.getElementById('year');
-        const branchSelect=document.getElementById('branch');
-        const regionSelect=document.getElementById('region');
-        const btnSearch=document.getElementById('btnSearch');
-        const loading=document.getElementById('loading');
-        const resultsSection=document.getElementById('resultsSection');
-        const teachersGrid=document.getElementById('teachersGrid');
-        const resultsCount=document.getElementById('resultsCount');
-        const videosSection=document.getElementById('videosSection');
-        const videosGrid=document.getElementById('videosGrid');
-        const videosTitle=document.getElementById('videosTitle');
-        const btnCloseVideos=document.getElementById('btnCloseVideos');
+        // ==================== GLOBAL STATE ====================
+        let currentUser = null;
+        let userRole = null;
+        let userData = null;
 
-        btnSearch.addEventListener('click',searchTeachers);
-        btnCloseVideos.addEventListener('click',closeVideos);
-        document.addEventListener('keydown',e=>{if(e.key==='Escape')closeVideos()});
+        // ==================== PAGE NAVIGATION ====================
+        function showPage(page) {
+            document.querySelectorAll('.auth-page').forEach(p => p.classList.add('hidden'));
+            document.getElementById('page-app').classList.add('hidden');
 
-        function searchTeachers(){
-            const year=yearSelect.value;
-            const branch=branchSelect.value;
-            const region=regionSelect.value;
-            if(!year||!branch||!region){showNotification('يرجى اختيار السنة والشعبة والمنطقة','warning');return}
-            loading.classList.add('active');
-            resultsSection.classList.remove('active');
-            closeVideos();
-            setTimeout(()=>{
-                let filtered=teachersData.filter(t=>t.year===year&&t.branch===branch&&t.region===region);
-                filtered.sort((a,b)=>b.rating-a.rating);
-                loading.classList.remove('active');
-                displayTeachers(filtered,region);
-            },600);
+            if (page === 'login') document.getElementById('page-login').classList.remove('hidden');
+            else if (page === 'register') document.getElementById('page-register').classList.remove('hidden');
+            else if (page === 'app') document.getElementById('page-app').classList.remove('hidden');
         }
 
-        function displayTeachers(teachers,selectedRegion){
-            const regionName=getRegionName(selectedRegion);
-            if(teachers.length===0){
-                teachersGrid.innerHTML=`<div class="no-results"><span class="no-results-icon">😕</span><p>لا يوجد مدرسين في <strong>${regionName}</strong> لهذه الشعبة حالياً</p><p style="font-size:0.9rem;margin-top:10px">جرب اختيار منطقة أخرى أو "أونلاين" للدروس عن بُعد</p></div>`;
-                resultsCount.textContent='0 مدرس';
-                resultsSection.classList.add('active');
+        // ==================== AUTH CHECK ====================
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                currentUser = user;
+                const doc = await db.collection('users').doc(user.uid).get();
+                if (doc.exists) {
+                    userData = doc.data();
+                    userRole = userData.role;
+                    showPage('app');
+                    loadDashboard();
+                }
+            } else {
+                currentUser = null;
+                userRole = null;
+                userData = null;
+                showPage('login');
+            }
+        });
+
+        // ==================== LOGIN ====================
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btnLogin');
+            const loading = document.getElementById('loginLoading');
+            const error = document.getElementById('loginError');
+
+            btn.disabled = true;
+            loading.style.display = 'block';
+            error.style.display = 'none';
+
+            try {
+                await auth.signInWithEmailAndPassword(
+                    document.getElementById('loginEmail').value,
+                    document.getElementById('loginPassword').value
+                );
+            } catch (err) {
+                error.textContent = getErrorMsg(err.code);
+                error.style.display = 'block';
+                btn.disabled = false;
+                loading.style.display = 'none';
+            }
+        });
+
+        // ==================== REGISTER ====================
+        document.getElementById('regRole').addEventListener('change', function() {
+            document.getElementById('teacherFields').classList.toggle('hidden', this.value !== 'teacher');
+        });
+
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btnRegister');
+            const loading = document.getElementById('regLoading');
+            const error = document.getElementById('regError');
+            const success = document.getElementById('regSuccess');
+
+            btn.disabled = true;
+            loading.style.display = 'block';
+            error.style.display = 'none';
+            success.style.display = 'none';
+
+            try {
+                const email = document.getElementById('regEmail').value;
+                const password = document.getElementById('regPassword').value;
+                const role = document.getElementById('regRole').value;
+
+                const cred = await auth.createUserWithEmailAndPassword(email, password);
+                const user = cred.user;
+
+                const userData = {
+                    uid: user.uid,
+                    fullName: document.getElementById('regName').value,
+                    email: email,
+                    role: role,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    status: role === 'teacher' ? 'pending' : 'active'
+                };
+
+                if (role === 'teacher') {
+                    userData.subject = document.getElementById('regSubject').value;
+                    userData.approved = false;
+                    userData.rating = 0;
+                    userData.students = 0;
+                    userData.experience = '';
+                    userData.videos = [];
+                }
+
+                await db.collection('users').doc(user.uid).set(userData);
+                await user.updateProfile({ displayName: userData.fullName });
+
+                success.textContent = role === 'teacher' 
+                    ? 'تم إنشاء الحساب! بانتظار موافقة الأدمن...' 
+                    : 'تم إنشاء الحساب بنجاح!';
+                success.style.display = 'block';
+
+                setTimeout(() => showPage('login'), 2000);
+
+            } catch (err) {
+                error.textContent = getErrorMsg(err.code);
+                error.style.display = 'block';
+                btn.disabled = false;
+                loading.style.display = 'none';
+            }
+        });
+
+        // ==================== LOGOUT ====================
+        async function logout() {
+            await auth.signOut();
+            showPage('login');
+        }
+
+        // ==================== LOAD DASHBOARD ====================
+        function loadDashboard() {
+            document.getElementById('userName').textContent = userData.fullName || 'مستخدم';
+            const roleBadge = document.getElementById('userRole');
+            roleBadge.textContent = userRole === 'admin' ? 'أدمن' : userRole === 'teacher' ? 'مدرس' : 'طالب';
+            roleBadge.className = 'badge badge-' + (userRole === 'admin' ? 'admin' : userRole);
+
+            const content = document.getElementById('appContent');
+
+            if (userRole === 'admin') loadAdminDashboard(content);
+            else if (userRole === 'teacher') loadTeacherDashboard(content);
+            else loadStudentDashboard(content);
+        }
+
+        // ==================== STUDENT DASHBOARD ====================
+        function loadStudentDashboard(container) {
+            container.innerHTML = `
+                <div class="welcome">
+                    <h2>👋 أهلاً بيك، ${userData.fullName}!</h2>
+                    <p>اختار بياناتك واكتشف أفضل المدرسين</p>
+                </div>
+                <div class="selection">
+                    <h3>🔍 اختر بياناتك الدراسية</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>السنة الدراسية</label>
+                            <select id="sYear">
+                                <option value="">-- اختر السنة --</option>
+                                <option value="first">أولى ثانوي</option>
+                                <option value="second">ثانية ثانوي</option>
+                                <option value="third">ثالثة ثانوي</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>الشعبة</label>
+                            <select id="sBranch">
+                                <option value="">-- اختر الشعبة --</option>
+                                <option value="scientific">الشعبة العلمية</option>
+                                <option value="literary">الشعبة الأدبية</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>المنطقة</label>
+                            <select id="sRegion">
+                                <option value="">-- اختر المنطقة --</option>
+                                <option value="cairo">القاهرة</option>
+                                <option value="alex">الإسكندرية</option>
+                                <option value="giza">الجيزة</option>
+                                <option value="mansoura">المنصورة</option>
+                                <option value="tanta">طنطا</option>
+                                <option value="online">أونلاين</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="btn-search" onclick="searchTeachers()">🔍 ابحث عن المدرسين</button>
+                </div>
+                <div id="studentResults"></div>
+                <div id="studentVideos" class="videos-section"></div>
+            `;
+        }
+
+        async function searchTeachers() {
+            const year = document.getElementById('sYear').value;
+            const branch = document.getElementById('sBranch').value;
+            const region = document.getElementById('sRegion').value;
+
+            if (!year || !branch || !region) { alert('يرجى اختيار السنة والشعبة والمنطقة'); return; }
+
+            const snapshot = await db.collection('teachers').where('approved', '==', true).get();
+            const teachers = [];
+            snapshot.forEach(doc => { const d = doc.data(); if (d.year === year && d.branch === branch && d.region === region) teachers.push({id: doc.id, ...d}); });
+            teachers.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+
+            const container = document.getElementById('studentResults');
+            if (teachers.length === 0) {
+                container.innerHTML = '<div class="no-results"><span class="no-results-icon">😕</span><p>لا يوجد مدرسين في هذه المنطقة</p></div>';
                 return;
             }
-            resultsCount.textContent=`${teachers.length} مدرس في ${regionName}`;
-            teachersGrid.innerHTML=teachers.map(teacher=>`
-                <div class="teacher-card" onclick="showVideos(${teacher.id})" role="button" tabindex="0">
-                    <div class="teacher-header">
-                        <div class="teacher-name">${teacher.name}</div>
-                        <div class="teacher-subject">${teacher.subject}</div>
-                        <div class="teacher-rating">⭐ ${teacher.rating}</div>
-                    </div>
-                    <div class="teacher-body">
-                        <div class="teacher-info"><span>📍</span><span>${teacher.regionName}</span></div>
-                        <div class="teacher-info"><span>⏱️</span><span>${teacher.experience}</span></div>
-                        <div class="teacher-info"><span>🔗</span><a href="${teacher.channel}" target="_blank" style="color:#1a237e;text-decoration:none" onclick="event.stopPropagation()">قناة YouTube</a></div>
-                        <div class="teacher-stats">
-                            <div class="stat"><div class="stat-value">${teacher.students}K</div><div class="stat-label">مشترك</div></div>
-                            <div class="stat"><div class="stat-value">${teacher.videos.length}</div><div class="stat-label">فيديو</div></div>
-                            <div class="stat"><div class="stat-value">${teacher.rating}</div><div class="stat-label">تقييم</div></div>
+
+            container.innerHTML = '<h3 style="color:var(--primary);margin-bottom:20px">⭐ أفضل المدرسين</h3><div class="teachers-grid">' + 
+                teachers.map(t => `
+                    <div class="teacher-card" onclick="showTeacherVideos('${t.id}', '${t.fullName}', '${t.subject}')">
+                        <div class="teacher-header">
+                            <div class="teacher-name">${t.fullName}</div>
+                            <div class="teacher-subject">${t.subject}</div>
+                            <div class="teacher-rating">⭐ ${t.rating || 0}</div>
                         </div>
-                        <button class="btn-videos" onclick="event.stopPropagation();showVideos(${teacher.id})"><span>🎬</span><span>مشاهدة الفيديوهات</span></button>
+                        <div class="teacher-body">
+                            <div class="teacher-info">📍 ${t.regionName || t.region}</div>
+                            <div class="teacher-info">⏱️ خبرة ${t.experience || '-'}</div>
+                            <div class="teacher-info">👥 ${t.students || 0}K مشترك</div>
+                            <button class="btn-videos" onclick="event.stopPropagation(); showTeacherVideos('${t.id}', '${t.fullName}', '${t.subject}')">🎬 مشاهدة الفيديوهات</button>
+                        </div>
                     </div>
+                `).join('') + '</div>';
+        }
+
+        async function showTeacherVideos(id, name, subject) {
+            const doc = await db.collection('teachers').doc(id).get();
+            if (!doc.exists) return;
+            const data = doc.data();
+            const videos = data.videos || [];
+
+            const container = document.getElementById('studentVideos');
+            container.innerHTML = `
+                <div class="videos-header">
+                    <h3>🎬 فيديوهات ${name} - ${subject}</h3>
+                    <button class="btn-close" onclick="document.getElementById('studentVideos').classList.remove('active')">✕ إغلاق</button>
                 </div>
-            `).join('');
-            resultsSection.classList.add('active');
-            setTimeout(()=>resultsSection.scrollIntoView({behavior:'smooth',block:'start'}),100);
+                <div class="videos-grid">${videos.map(v => `
+                    <div class="video-card">
+                        <div class="video-wrapper"><iframe src="${v.embed}" allowfullscreen></iframe></div>
+                        <div class="video-info"><div class="video-title">${v.title}</div></div>
+                    </div>
+                `).join('')}</div>
+            `;
+            container.classList.add('active');
         }
 
-        function getRegionName(code){
-            const regions={cairo:'القاهرة',alex:'الإسكندرية',giza:'الجيزة',mansoura:'المنصورة',tanta:'طنطا',online:'أونلاين'};
-            return regions[code]||code;
-        }
-
-        function showVideos(teacherId){
-            const teacher=teachersData.find(t=>t.id===teacherId);
-            if(!teacher)return;
-            videosTitle.textContent=`🎬 فيديوهات ${teacher.name} - ${teacher.subject}`;
-            videosGrid.innerHTML=teacher.videos.map((video,index)=>`
-                <div class="video-card" style="animation:fadeIn 0.5s ease ${index*0.1}s both">
-                    <div class="video-wrapper">
-                        <iframe src="${video.embed}" title="${video.title}" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen loading="lazy"></iframe>
-                    </div>
-                    <div class="video-info">
-                        <div class="video-title">${video.title}</div>
-                        <div class="video-subject"><span>📚</span><span>${video.subject}</span></div>
-                    </div>
+        // ==================== TEACHER DASHBOARD ====================
+        function loadTeacherDashboard(container) {
+            const isPending = !userData.approved;
+            container.innerHTML = `
+                <div class="welcome">
+                    <h2>👋 أهلاً بيك، ${userData.fullName}!</h2>
+                    <p>إدارة بياناتك والفيديوهات</p>
+                    ${isPending ? '<span class="status-badge status-pending">⏳ بانتظار الموافقة</span>' : '<span class="status-badge status-active">✅ حساب معتمد</span>'}
                 </div>
-            `).join('');
-            videosSection.classList.add('active');
-            setTimeout(()=>videosSection.scrollIntoView({behavior:'smooth',block:'start'}),100);
+                ${isPending ? '<div class="alert alert-warning">حسابك بانتظار موافقة الأدmin. لن تظهر في نتائج البحث حتى يتم الموافقة.</div>' : ''}
+
+                <div class="stats-grid">
+                    <div class="stat-card"><div class="value" id="tVideoCount">0</div><div class="label">فيديوهات</div></div>
+                    <div class="stat-card"><div class="value" id="tRating">0</div><div class="label">التقييم</div></div>
+                </div>
+
+                <div class="section-card">
+                    <h3>👤 بياناتي</h3>
+                    <form id="teacherProfileForm">
+                        <div class="form-group"><label>المنطقة</label>
+                            <select id="tRegion">
+                                <option value="cairo">القاهرة</option>
+                                <option value="alex">الإسكندرية</option>
+                                <option value="giza">الجيزة</option>
+                                <option value="mansoura">المنصورة</option>
+                                <option value="tanta">طنطا</option>
+                                <option value="online">أونلاين</option>
+                            </select>
+                        </div>
+                        <div class="form-group"><label>سنوات الخبرة</label><input type="text" id="tExperience" placeholder="مثال: 10 سنوات"></div>
+                        <div class="form-group"><label>السنة الدراسية</label>
+                            <select id="tYear">
+                                <option value="first">أولى ثانوي</option>
+                                <option value="second">ثانية ثانوي</option>
+                                <option value="third">ثالثة ثانوي</option>
+                            </select>
+                        </div>
+                        <div class="form-group"><label>الشعبة</label>
+                            <select id="tBranch">
+                                <option value="scientific">علمي</option>
+                                <option value="literary">أدبي</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn-primary" style="width:auto;padding:12px 30px">💾 حفظ البيانات</button>
+                    </form>
+                </div>
+
+                <div class="section-card">
+                    <h3>🎬 فيديوهاتي</h3>
+                    <button class="btn-add" onclick="showAddVideoForm()">+ إضافة فيديو</button>
+                    <div id="addVideoForm" class="hidden">
+                        <div class="form-group"><label>عنوان الفيديو</label><input type="text" id="newVideoTitle" placeholder="عنوان الفيديو"></div>
+                        <div class="form-group"><label>رابط YouTube Embed</label><input type="text" id="newVideoUrl" placeholder="https://www.youtube.com/embed/..."></div>
+                        <button class="btn-primary" style="width:auto;padding:10px 20px;margin:5px" onclick="addVideo()">➕ إضافة</button>
+                        <button class="btn-close" style="padding:10px 20px" onclick="hideAddVideoForm()">إلغاء</button>
+                    </div>
+                    <div class="video-list" id="teacherVideoList"></div>
+                </div>
+            `;
+
+            // Load teacher data
+            document.getElementById('tRegion').value = userData.region || 'cairo';
+            document.getElementById('tExperience').value = userData.experience || '';
+            document.getElementById('tYear').value = userData.year || 'first';
+            document.getElementById('tBranch').value = userData.branch || 'scientific';
+
+            document.getElementById('teacherProfileForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const updates = {
+                    region: document.getElementById('tRegion').value,
+                    regionName: getRegionName(document.getElementById('tRegion').value),
+                    experience: document.getElementById('tExperience').value,
+                    year: document.getElementById('tYear').value,
+                    branch: document.getElementById('tBranch').value
+                };
+                await db.collection('users').doc(currentUser.uid).update(updates);
+                await db.collection('teachers').doc(currentUser.uid).update(updates);
+                alert('✅ تم حفظ البيانات!');
+            });
+
+            loadTeacherVideos();
         }
 
-        function closeVideos(){
-            videosSection.classList.remove('active');
-            const iframes=videosGrid.querySelectorAll('iframe');
-            iframes.forEach(iframe=>{iframe.src=iframe.src});
+        async function loadTeacherVideos() {
+            const doc = await db.collection('teachers').doc(currentUser.uid).get();
+            if (!doc.exists) return;
+            const data = doc.data();
+            const videos = data.videos || [];
+            document.getElementById('tVideoCount').textContent = videos.length;
+            document.getElementById('tRating').textContent = data.rating || 0;
+
+            const list = document.getElementById('teacherVideoList');
+            list.innerHTML = videos.length === 0 ? '<p style="text-align:center;color:var(--light)">لا يوجد فيديوهات</p>' : 
+                videos.map((v, i) => `
+                    <div class="video-item">
+                        <div><div class="title">${v.title}</div><div class="url">${v.embed}</div></div>
+                        <button class="btn-small btn-delete" onclick="deleteVideo(${i})">🗑️ حذف</button>
+                    </div>
+                `).join('');
         }
 
-        function showNotification(message,type='info'){
-            const existing=document.querySelector('.notification');
-            if(existing)existing.remove();
-            const notification=document.createElement('div');
-            notification.className=`notification notification-${type}`;
-            notification.innerHTML=`<span class="notification-icon">${type==='warning'?'⚠️':'ℹ️'}</span><span class="notification-text">${message}</span>`;
-            notification.style.cssText=`position:fixed;top:20px;left:50%;transform:translateX(-50%);background:${type==='warning'?'#fff3e0':'#e3f2fd'};color:${type==='warning'?'#e65100':'#1565c0'};padding:15px 25px;border-radius:10px;box-shadow:0 4px 15px rgba(0,0,0,0.15);display:flex;align-items:center;gap:10px;font-weight:600;z-index:10000;animation:slideDown 0.3s ease;border:2px solid ${type==='warning'?'#ff9800':'#2196f3'}`;
-            document.body.appendChild(notification);
-            setTimeout(()=>{notification.style.animation='slideUp 0.3s ease';setTimeout(()=>notification.remove(),300)},3000);
+        function showAddVideoForm() { document.getElementById('addVideoForm').classList.remove('hidden'); }
+        function hideAddVideoForm() { document.getElementById('addVideoForm').classList.add('hidden'); }
+
+        async function addVideo() {
+            const title = document.getElementById('newVideoTitle').value;
+            const url = document.getElementById('newVideoUrl').value;
+            if (!title || !url) { alert('يرجى ملء جميع الحقول'); return; }
+
+            const ref = db.collection('teachers').doc(currentUser.uid);
+            const doc = await ref.get();
+            const videos = doc.exists ? (doc.data().videos || []) : [];
+            videos.push({ title, embed: url });
+
+            if (doc.exists) await ref.update({ videos });
+            else await ref.set({ ...userData, videos, rating: 0, students: 0 });
+
+            loadTeacherVideos();
+            hideAddVideoForm();
+            alert('✅ تم إضافة الفيديو!');
         }
 
-        const scrollTopBtn=document.createElement('button');
-        scrollTopBtn.className='scroll-top';
-        scrollTopBtn.innerHTML='↑';
-        scrollTopBtn.title='العودة للأعلى';
-        document.body.appendChild(scrollTopBtn);
-        scrollTopBtn.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
-        window.addEventListener('scroll',()=>{if(window.scrollY>500)scrollTopBtn.classList.add('visible');else scrollTopBtn.classList.remove('visible')});
+        async function deleteVideo(index) {
+            if (!confirm('هل أنت متأكد؟')) return;
+            const ref = db.collection('teachers').doc(currentUser.uid);
+            const doc = await ref.get();
+            if (doc.exists) {
+                const videos = doc.data().videos || [];
+                videos.splice(index, 1);
+                await ref.update({ videos });
+                loadTeacherVideos();
+            }
+        }
 
-        const style=document.createElement('style');
-        style.textContent='@keyframes slideDown{from{transform:translateX(-50%) translateY(-100%);opacity:0}to{transform:translateX(-50%) translateY(0);opacity:1}}@keyframes slideUp{from{transform:translateX(-50%) translateY(0);opacity:1}to{transform:translateX(-50%) translateY(-100%);opacity:0}}';
-        document.head.appendChild(style);
+        // ==================== ADMIN DASHBOARD ====================
+        async function loadAdminDashboard(container) {
+            container.innerHTML = `
+                <div class="welcome">
+                    <h2>⚙️ لوحة التحكم</h2>
+                    <p>إدارة المنصة بالكامل</p>
+                    <span class="status-badge status-admin">أدمن</span>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card"><div class="value" id="aStudents">0</div><div class="label">طلاب</div></div>
+                    <div class="stat-card"><div class="value" id="aTeachers">0</div><div class="label">مدرسين</div></div>
+                    <div class="stat-card"><div class="value" id="aPending">0</div><div class="label">بانتظار الموافقة</div></div>
+                </div>
+
+                <div class="section-card">
+                    <h3>⏳ مدرسين بانتظار الموافقة</h3>
+                    <div id="pendingTeachers"></div>
+                </div>
+
+                <div class="section-card">
+                    <h3>🎓 الطلاب</h3>
+                    <div id="allStudents"></div>
+                </div>
+
+                <div class="section-card">
+                    <h3>👨‍🏫 المدرسين المعتمدين</h3>
+                    <div id="approvedTeachers"></div>
+                </div>
+            `;
+
+            await loadAdminStats();
+            await loadPendingTeachers();
+            await loadAllStudents();
+            await loadApprovedTeachers();
+        }
+
+        async function loadAdminStats() {
+            const students = await db.collection('users').where('role', '==', 'student').get();
+            const teachers = await db.collection('users').where('role', '==', 'teacher').where('approved', '==', true).get();
+            const pending = await db.collection('users').where('role', '==', 'teacher').where('approved', '==', false).get();
+            document.getElementById('aStudents').textContent = students.size;
+            document.getElementById('aTeachers').textContent = teachers.size;
+            document.getElementById('aPending').textContent = pending.size;
+        }
+
+        async function loadPendingTeachers() {
+            const snapshot = await db.collection('users').where('role', '==', 'teacher').where('approved', '==', false).get();
+            const container = document.getElementById('pendingTeachers');
+            if (snapshot.empty) { container.innerHTML = '<p class="no-results">لا يوجد طلبات</p>'; return; }
+
+            container.innerHTML = '<table><tr><th>الاسم</th><th>المادة</th><th>البريد</th><th>إجراءات</th></tr>' + 
+                snapshot.docs.map(d => { const u = d.data(); return `
+                    <tr><td>${u.fullName}</td><td>${u.subject || '-'}</td><td>${u.email}</td>
+                    <td><button class="btn-small btn-approve" onclick="approveTeacher('${d.id}')">موافقة</button>
+                    <button class="btn-small btn-reject" onclick="rejectTeacher('${d.id}')">رفض</button></td></tr>
+                `; }).join('') + '</table>';
+        }
+
+        async function loadAllStudents() {
+            const snapshot = await db.collection('users').where('role', '==', 'student').get();
+            const container = document.getElementById('allStudents');
+            if (snapshot.empty) { container.innerHTML = '<p class="no-results">لا يوجد طلاب</p>'; return; }
+
+            container.innerHTML = '<table><tr><th>الاسم</th><th>البريد</th><th>تاريخ التسجيل</th><th>إجراءات</th></tr>' + 
+                snapshot.docs.map(d => { const u = d.data(); return `
+                    <tr><td>${u.fullName}</td><td>${u.email}</td><td>${u.createdAt ? new Date(u.createdAt.toDate()).toLocaleDateString('ar-EG') : '-'}</td>
+                    <td><button class="btn-small btn-delete" onclick="deleteUser('${d.id}')">حذف</button></td></tr>
+                `; }).join('') + '</table>';
+        }
+
+        async function loadApprovedTeachers() {
+            const snapshot = await db.collection('users').where('role', '==', 'teacher').where('approved', '==', true).get();
+            const container = document.getElementById('approvedTeachers');
+            if (snapshot.empty) { container.innerHTML = '<p class="no-results">لا يوجد مدرسين</p>'; return; }
+
+            container.innerHTML = '<table><tr><th>الاسم</th><th>المادة</th><th>التقييم</th><th>إجراءات</th></tr>' + 
+                snapshot.docs.map(d => { const u = d.data(); return `
+                    <tr><td>${u.fullName}</td><td>${u.subject || '-'}</td><td>⭐ ${u.rating || 0}</td>
+                    <td><button class="btn-small btn-delete" onclick="deleteUser('${d.id}')">حذف</button></td></tr>
+                `; }).join('') + '</table>';
+        }
+
+        async function approveTeacher(uid) {
+            await db.collection('users').doc(uid).update({ approved: true, status: 'active' });
+            await db.collection('teachers').doc(uid).set({ ...(await db.collection('users').doc(uid).get()).data() });
+            alert('تم الموافقة!');
+            loadAdminStats(); loadPendingTeachers(); loadApprovedTeachers();
+        }
+
+        async function rejectTeacher(uid) {
+            if (!confirm('هل أنت متأكد؟')) return;
+            await db.collection('users').doc(uid).delete();
+            alert('تم الرفض');
+            loadAdminStats(); loadPendingTeachers();
+        }
+
+        async function deleteUser(uid) {
+            if (!confirm('هل أنت متأكد من الحذف؟')) return;
+            await db.collection('users').doc(uid).delete();
+            await db.collection('teachers').doc(uid).delete();
+            alert('تم الحذف');
+            loadAdminStats(); loadAllStudents(); loadApprovedTeachers();
+        }
+
+        // ==================== HELPERS ====================
+        function getRegionName(code) {
+            const regions = {cairo:'القاهرة',alex:'الإسكندرية',giza:'الجيزة',mansoura:'المنصورة',tanta:'طنطا',online:'أونلاين'};
+            return regions[code] || code;
+        }
+
+        function getErrorMsg(code) {
+            const errors = {
+                'auth/email-already-in-use': 'البريد مستخدم بالفعل',
+                'auth/invalid-email': 'بريد غير صحيح',
+                'auth/weak-password': 'كلمة المرور ضعيفة',
+                'auth/user-not-found': 'البريد غير مسجل',
+                'auth/wrong-password': 'كلمة المرور غير صحيحة',
+                'auth/network-request-failed': 'مشكلة في الاتصال'
+            };
+            return errors[code] || 'حدث خطأ، جرب مرة أخرى';
+        }
 
         console.log('%cمنصة ثورة تعليمية','font-size:24px;font-weight:bold;color:#1a237e');
-        console.log('%cملف واحد - بيانات حقيقية 100%','font-size:14px;color:#666');
+        console.log('%cملف واحد - كل حاجة في مكان واحد','font-size:14px;color:#666');
     </script>
 </body>
-</html>
+</html>س
