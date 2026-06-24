@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول - منصة ثورة تعليمية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Cairo',sans-serif;background:linear-gradient(135deg,#1a237e 0%,#3949ab 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+        .login-box{background:#fff;border-radius:20px;padding:40px;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,0.3)}
+        .login-box h1{color:#1a237e;text-align:center;margin-bottom:10px;font-size:1.8rem}
+        .login-box .subtitle{color:#666;text-align:center;margin-bottom:30px;font-size:0.95rem}
+        .form-group{margin-bottom:20px}
+        .form-group label{display:block;color:#333;font-weight:600;margin-bottom:8px;font-size:0.95rem}
+        .form-group input{width:100%;padding:14px 18px;border:2px solid #e0e0e0;border-radius:12px;font-size:1rem;font-family:'Cairo',sans-serif;transition:all 0.3s}
+        .form-group input:focus{outline:none;border-color:#1a237e;box-shadow:0 0 0 3px rgba(26,35,126,0.1)}
+        .btn-login{background:linear-gradient(135deg,#1a237e 0%,#3949ab 100%);color:#fff;border:none;padding:16px;width:100%;border-radius:12px;font-size:1.1rem;font-family:'Cairo',sans-serif;font-weight:700;cursor:pointer;transition:all 0.3s;margin-top:10px}
+        .btn-login:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(26,35,126,0.3)}
+        .btn-login:disabled{opacity:0.6;cursor:not-allowed;transform:none}
+        .register-link{text-align:center;margin-top:20px;color:#666}
+        .register-link a{color:#1a237e;text-decoration:none;font-weight:700}
+        .register-link a:hover{text-decoration:underline}
+        .error{color:#f44336;font-size:0.85rem;margin-top:5px;display:none;text-align:center}
+        .loading{display:none;text-align:center;margin-top:15px}
+        .spinner{width:30px;height:30px;border:3px solid #e0e0e0;border-top-color:#1a237e;border-radius:50%;animation:spin 1s linear infinite;display:inline-block}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .role-select{display:flex;gap:10px;margin-bottom:20px}
+        .role-option{flex:1;padding:12px;border:2px solid #e0e0e0;border-radius:12px;text-align:center;cursor:pointer;transition:all 0.3s}
+        .role-option:hover{border-color:#1a237e}
+        .role-option.selected{border-color:#1a237e;background:rgba(26,35,126,0.05)}
+        .role-option .icon{font-size:1.5rem;margin-bottom:5px}
+        .role-option .text{font-size:0.85rem;font-weight:600}
+    </style>
+<base target="_blank">
+</head>
+<body>
+    <div class="login-box">
+        <h1>📚 تسجيل الدخول</h1>
+        <p class="subtitle">أهلاً بك في منصة ثورة تعليمية</p>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label>البريد الإلكتروني</label>
+                <input type="email" id="email" placeholder="example@email.com" required>
+            </div>
+
+            <div class="form-group">
+                <label>كلمة المرور</label>
+                <input type="password" id="password" placeholder="********" required>
+            </div>
+
+            <button type="submit" class="btn-login" id="btnLogin">تسجيل الدخول</button>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p style="margin-top:10px;color:#666">جاري تسجيل الدخول...</p>
+            </div>
+
+            <div class="error" id="errorMsg"></div>
+        </form>
+
+        <div class="register-link">
+            مش عندك حساب؟ <a href="register.html">إنشاء حساب جديد</a>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+
+    <script>
+        // Check if already logged in
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                const role = await getUserRole(user.uid);
+                redirectBasedOnRole(role);
+            }
+        });
+
+        // Login form
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            const btn = document.getElementById('btnLogin');
+            const loading = document.getElementById('loading');
+            const errorMsg = document.getElementById('errorMsg');
+
+            btn.disabled = true;
+            loading.style.display = 'block';
+            errorMsg.style.display = 'none';
+
+            try {
+                const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                const user = userCredential.user;
+
+                // Get user role from Firestore
+                const role = await getUserRole(user.uid);
+
+                if (!role) {
+                    throw new Error('User role not found');
+                }
+
+                // Redirect based on role
+                redirectBasedOnRole(role);
+
+            } catch (error) {
+                errorMsg.textContent = getErrorMessage(error.code || error.message);
+                errorMsg.style.display = 'block';
+                btn.disabled = false;
+                loading.style.display = 'none';
+            }
+        });
+
+        function redirectBasedOnRole(role) {
+            switch(role) {
+                case 'admin':
+                    window.location.href = 'admin.html';
+                    break;
+                case 'teacher':
+                    window.location.href = 'teacher.html';
+                    break;
+                case 'student':
+                    window.location.href = 'student.html';
+                    break;
+                default:
+                    window.location.href = 'index.html';
+            }
+        }
+
+        function getErrorMessage(code) {
+            const errors = {
+                'auth/user-not-found': 'البريد الإلكتروني غير مسجل',
+                'auth/wrong-password': 'كلمة المرور غير صحيحة',
+                'auth/invalid-email': 'بريد إلكتروني غير صحيح',
+                'auth/user-disabled': 'الحساب معطل، تواصل مع الأدمن',
+                'auth/too-many-requests': 'محاولات كتير، جرب بعدين',
+                'auth/network-request-failed': 'مشكلة في الاتصال'
+            };
+            return errors[code] || 'حدث خطأ، جرب مرة أخرى';
+        }
+    </script>
+</body>
+</html>

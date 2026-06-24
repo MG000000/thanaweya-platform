@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة الطالب - منصة ثورة تعليمية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--primary:#1a237e;--primary-light:#3949ab;--accent:#ffc107;--success:#4caf50;--bg:#f5f5f5;--card:#fff;--text:#333;--light:#666}
+        body{font-family:'Cairo',sans-serif;background:var(--bg);min-height:100vh}
+        .navbar{background:var(--primary);color:#fff;padding:15px 30px;display:flex;justify-content:space-between;align-items:center}
+        .navbar h1{font-size:1.3rem}
+        .navbar .user{display:flex;align-items:center;gap:15px}
+        .navbar .btn-logout{background:rgba(255,255,255,0.2);color:#fff;border:none;padding:8px 20px;border-radius:8px;cursor:pointer;font-family:'Cairo',sans-serif;transition:all 0.3s}
+        .navbar .btn-logout:hover{background:rgba(255,255,255,0.3)}
+        .container{max-width:1200px;margin:0 auto;padding:30px}
+        .welcome{background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 100%);color:#fff;padding:30px;border-radius:15px;margin-bottom:30px;box-shadow:0 4px 15px rgba(0,0,0,0.15)}
+        .welcome h2{font-size:1.5rem;margin-bottom:10px}
+        .selection{background:var(--card);border-radius:15px;padding:30px;margin-bottom:30px;box-shadow:0 2px 10px rgba(0,0,0,0.1)}
+        .selection h3{color:var(--primary);margin-bottom:20px}
+        .form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px}
+        .form-group{display:flex;flex-direction:column}
+        .form-group label{font-weight:600;color:var(--text);margin-bottom:8px}
+        .form-group select{padding:12px;border:2px solid #e0e0e0;border-radius:10px;font-size:1rem;font-family:'Cairo',sans-serif}
+        .form-group select:focus{outline:none;border-color:var(--primary)}
+        .btn-search{background:var(--primary);color:#fff;border:none;padding:15px 40px;border-radius:10px;cursor:pointer;font-family:'Cairo',sans-serif;font-weight:700;font-size:1rem;margin-top:20px;transition:all 0.3s}
+        .btn-search:hover{background:var(--primary-light);transform:translateY(-2px)}
+        .results{display:none;margin-top:30px}
+        .results.active{display:block}
+        .results h3{color:var(--primary);margin-bottom:20px;font-size:1.3rem}
+        .teachers-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
+        .teacher-card{background:var(--card);border-radius:15px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,0.1);transition:all 0.3s;cursor:pointer}
+        .teacher-card:hover{transform:translateY(-5px);box-shadow:0 8px 25px rgba(0,0,0,0.15)}
+        .teacher-header{background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 100%);color:#fff;padding:20px;position:relative}
+        .teacher-name{font-weight:700;font-size:1.1rem}
+        .teacher-subject{font-size:0.9rem;opacity:0.9}
+        .teacher-rating{position:absolute;left:15px;top:50%;transform:translateY(-50%);background:var(--accent);color:#333;padding:5px 12px;border-radius:20px;font-weight:700;font-size:0.85rem}
+        .teacher-body{padding:20px}
+        .teacher-info{display:flex;align-items:center;gap:8px;margin-bottom:8px;color:var(--light);font-size:0.9rem}
+        .btn-videos{background:var(--success);color:#fff;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-family:'Cairo',sans-serif;font-weight:600;width:100%;margin-top:15px}
+        .videos-section{display:none;background:var(--card);border-radius:15px;padding:25px;margin-top:20px;box-shadow:0 2px 10px rgba(0,0,0,0.1)}
+        .videos-section.active{display:block}
+        .videos-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+        .btn-close{background:var(--danger);color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-family:'Cairo',sans-serif}
+        .videos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
+        .video-card{border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+        .video-wrapper{position:relative;padding-bottom:56.25%;height:0}
+        .video-wrapper iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}
+        .video-info{padding:15px}
+        .video-title{font-weight:600;font-size:0.9rem}
+        .no-results{text-align:center;padding:40px;color:var(--light)}
+    </style>
+<base target="_blank">
+</head>
+<body>
+    <nav class="navbar">
+        <h1>📚 منصة ثورة تعليمية</h1>
+        <div class="user">
+            <span id="studentName">طالب</span>
+            <button class="btn-logout" onclick="logout()">🚪 خروج</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="welcome">
+            <h2>👋 أهلاً بيك، <span id="welcomeName">طالب</span>!</h2>
+            <p>اختار بياناتك واكتشف أفضل المدرسين</p>
+        </div>
+
+        <div class="selection">
+            <h3>🔍 اختر بياناتك الدراسية</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>السنة الدراسية</label>
+                    <select id="year">
+                        <option value="">-- اختر السنة --</option>
+                        <option value="first">أولى ثانوي</option>
+                        <option value="second">ثانية ثانوي</option>
+                        <option value="third">ثالثة ثانوي</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>الشعبة</label>
+                    <select id="branch">
+                        <option value="">-- اختر الشعبة --</option>
+                        <option value="scientific">الشعبة العلمية</option>
+                        <option value="literary">الشعبة الأدبية</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>المنطقة</label>
+                    <select id="region">
+                        <option value="">-- اختر المنطقة --</option>
+                        <option value="cairo">القاهرة</option>
+                        <option value="alex">الإسكندرية</option>
+                        <option value="giza">الجيزة</option>
+                        <option value="mansoura">المنصورة</option>
+                        <option value="tanta">طنطا</option>
+                        <option value="online">أونلاين</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn-search" onclick="searchTeachers()">🔍 ابحث عن المدرسين</button>
+        </div>
+
+        <div class="results" id="resultsSection">
+            <h3>⭐ أفضل المدرسين</h3>
+            <div class="teachers-grid" id="teachersGrid"></div>
+        </div>
+
+        <div class="videos-section" id="videosSection">
+            <div class="videos-header">
+                <h3 id="videosTitle">🎬 فيديوهات</h3>
+                <button class="btn-close" onclick="closeVideos()">✕ إغلاق</button>
+            </div>
+            <div class="videos-grid" id="videosGrid"></div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+
+    <script>
+        // Check auth
+        auth.onAuthStateChanged(async (user) => {
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const role = await getUserRole(user.uid);
+            if (role !== 'student') {
+                alert('غير مصرح لك!');
+                await auth.signOut();
+                window.location.href = 'login.html';
+                return;
+            }
+
+            document.getElementById('studentName').textContent = user.displayName || 'طالب';
+            document.getElementById('welcomeName').textContent = user.displayName || 'طالب';
+        });
+
+        // Load teachers from Firestore
+        async function loadTeachersFromDB() {
+            const snapshot = await db.collection('teachers').where('approved', '==', true).get();
+            const teachers = [];
+            snapshot.forEach(doc => {
+                teachers.push({ id: doc.id, ...doc.data() });
+            });
+            return teachers;
+        }
+
+        async function searchTeachers() {
+            const year = document.getElementById('year').value;
+            const branch = document.getElementById('branch').value;
+            const region = document.getElementById('region').value;
+
+            if (!year || !branch || !region) {
+                alert('يرجى اختيار السنة والشعبة والمنطقة');
+                return;
+            }
+
+            // Save student preferences
+            const user = auth.currentUser;
+            if (user) {
+                await db.collection('users').doc(user.uid).update({ year, branch });
+            }
+
+            const teachers = await loadTeachersFromDB();
+            const filtered = teachers.filter(t => t.year === year && t.branch === branch && t.region === region);
+            filtered.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+
+            displayTeachers(filtered);
+        }
+
+        function displayTeachers(teachers) {
+            const grid = document.getElementById('teachersGrid');
+            const results = document.getElementById('resultsSection');
+
+            if (teachers.length === 0) {
+                grid.innerHTML = '<div class="no-results">لا يوجد مدرسين في هذه المنطقة</div>';
+                results.classList.add('active');
+                return;
+            }
+
+            grid.innerHTML = teachers.map(teacher => `
+                <div class="teacher-card" onclick="showVideos('${teacher.id}', '${teacher.name}', '${teacher.subject}')">
+                    <div class="teacher-header">
+                        <div class="teacher-name">${teacher.name}</div>
+                        <div class="teacher-subject">${teacher.subject}</div>
+                        <div class="teacher-rating">⭐ ${teacher.rating || 0}</div>
+                    </div>
+                    <div class="teacher-body">
+                        <div class="teacher-info">📍 ${teacher.regionName || teacher.region}</div>
+                        <div class="teacher-info">⏱️ خبرة ${teacher.experience || '-'}</div>
+                        <div class="teacher-info">👥 ${teacher.students || 0}K مشترك</div>
+                        <button class="btn-videos" onclick="event.stopPropagation(); showVideos('${teacher.id}', '${teacher.name}', '${teacher.subject}')">🎬 مشاهدة الفيديوهات</button>
+                    </div>
+                </div>
+            `).join('');
+
+            results.classList.add('active');
+        }
+
+        async function showVideos(teacherId, teacherName, teacherSubject) {
+            const doc = await db.collection('teachers').doc(teacherId).get();
+            if (!doc.exists) return;
+
+            const teacher = doc.data();
+            document.getElementById('videosTitle').textContent = `🎬 فيديوهات ${teacherName} - ${teacherSubject}`;
+
+            const videos = teacher.videos || [];
+            document.getElementById('videosGrid').innerHTML = videos.map(video => `
+                <div class="video-card">
+                    <div class="video-wrapper">
+                        <iframe src="${video.embed}" allowfullscreen></iframe>
+                    </div>
+                    <div class="video-info">
+                        <div class="video-title">${video.title}</div>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('videosSection').classList.add('active');
+        }
+
+        function closeVideos() {
+            document.getElementById('videosSection').classList.remove('active');
+        }
+
+        async function logout() {
+            await auth.signOut();
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>
