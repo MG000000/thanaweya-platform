@@ -141,7 +141,8 @@
                 <div class="loading" id="loginLoading"><div class="spinner"></div><p style="margin-top:10px;color:#666">جاري تسجيل الدخول...</p></div>
                 <div class="error" id="loginError"></div>
             </form>
-            <a href="javascript:void(0)" onclick="event.preventDefault(); showPage('register')">إنشاء حساب جديد</a>
+            <div class="auth-link">مش عندك حساب؟ <a href="javascript:void(0)" onclick="event.preventDefault(); showPage('register')">إنشاء حساب جديد</a></div>
+        </div>
     </div>
 
     <!-- ==================== REGISTER PAGE ==================== -->
@@ -189,7 +190,7 @@
                 <div class="error" id="regError"></div>
                 <div class="success" id="regSuccess"></div>
             </form>
-            <div class="auth-link">عندك حساب بالفعل؟ <a href="#" onclick="showPage('login')">سجل دخول من هنا</a></div>
+            <div class="auth-link">عندك حساب بالفعل؟ <a href="javascript:void(0)" onclick="event.preventDefault(); showPage('login')">سجل دخول من هنا</a></div>
         </div>
     </div>
 
@@ -735,4 +736,4 @@
         console.log('%cملف واحد - كل حاجة في مكان واحد','font-size:14px;color:#666');
     </script>
 </body>
-</html>س
+</html>
