@@ -329,6 +329,13 @@
         }
 
         function checkAuth() {
+            // Force init data if empty
+            const users = DB.getUsers();
+            if (users.length === 0) {
+                console.log('No users found, initializing...');
+                initData();
+            }
+
             const user = DB.getCurrentUser();
             if (user) { currentUser = user; userRole = user.role; userData = user; showPage('app'); loadDashboard(); }
             else showPage('login');
@@ -339,10 +346,21 @@
             e.preventDefault();
             const btn = document.getElementById('btnLogin'), loading = document.getElementById('loginLoading'), error = document.getElementById('loginError');
             btn.disabled = true; loading.style.display = 'block'; error.style.display = 'none';
+
+            // Ensure data exists
+            let users = DB.getUsers();
+            if (users.length === 0) {
+                initData();
+                users = DB.getUsers();
+            }
+
             const email = document.getElementById('loginEmail').value, password = document.getElementById('loginPassword').value;
-            const users = DB.getUsers(), user = users.find(u => u.email === email && u.password === password);
+            console.log('Trying login:', email, password);
+            console.log('Available users:', users.map(u => ({email: u.email, role: u.role})));
+
+            const user = users.find(u => u.email === email && u.password === password);
             if (user) { DB.setCurrentUser(user); currentUser = user; userRole = user.role; userData = user; showPage('app'); loadDashboard(); }
-            else { error.textContent = 'البريد أو كلمة المرور غير صحيحة'; error.style.display = 'block'; btn.disabled = false; loading.style.display = 'none'; }
+            else { error.textContent = 'البريد أو كلمة المرور غير صحيحة (المستخدمين: ' + users.length + ')'; error.style.display = 'block'; btn.disabled = false; loading.style.display = 'none'; }
         });
 
         // ==================== ADMIN LOGIN ====================
