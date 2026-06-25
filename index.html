@@ -203,7 +203,17 @@
 
         // ==================== DEFAULT DATA ====================
         function initData() {
-            const users = DB.getUsers();
+            let users = DB.getUsers();
+
+            // Check if admin exists, if not clear and re-init
+            const adminExists = users.find(u => u.email === 'admin@thawra.edu');
+            if (!adminExists) {
+                console.log('Admin not found, clearing data...');
+                localStorage.removeItem('users');
+                localStorage.removeItem('teachers');
+                users = [];
+            }
+
             if (users.length === 0) {
                 // Add default admin
                 users.push({
