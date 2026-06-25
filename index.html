@@ -63,7 +63,8 @@
         .videos-section{display:none;background:var(--card);border-radius:var(--r);padding:25px;margin-top:20px;box-shadow:var(--shadow)}
         .videos-section.active{display:block}
         .videos-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
-        .btn-close{background:var(--danger);color:#fff;border:none;padding:8px 16px;border-radius:var(--rs);cursor:pointer;font-family:'Cairo',sans-serif}
+        .btn-close{background:var(--danger);color:#fff;border:none;padding:8px 16px;border-radius:var(--rs);cursor:pointer;font-family:'Cairo',sans-serif
+    }
         .videos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
         .video-card{border-radius:var(--rs);overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
         .video-wrapper{position:relative;padding-bottom:56.25%;height:0;background:#000}
@@ -190,6 +191,7 @@
     </div>
 
     <script>
+        // ==================== LOCAL DATABASE ====================
         const DB = {
             getUsers() { return JSON.parse(localStorage.getItem('users') || '[]'); },
             saveUsers(users) { localStorage.setItem('users', JSON.stringify(users)); },
@@ -199,6 +201,119 @@
             setCurrentUser(user) { localStorage.setItem('currentUser', JSON.stringify(user)); },
             clearCurrentUser() { localStorage.removeItem('currentUser'); }
         };
+
+        // ==================== DEFAULT DATA ====================
+        function initData() {
+            const users = DB.getUsers();
+            if (users.length === 0) {
+                // Add default admin
+                users.push({
+                    id: 'admin001',
+                    fullName: 'مدير المنصة',
+                    email: 'admin@thawra.edu',
+                    password: 'mostafa@123',
+                    role: 'admin',
+                    createdAt: new Date().toISOString(),
+                    status: 'active'
+                });
+
+                // Add sample students
+                users.push({
+                    id: 'student001',
+                    fullName: 'أحمد محمد',
+                    email: 'ahmed@student.com',
+                    password: '123456',
+                    role: 'student',
+                    createdAt: new Date().toISOString(),
+                    status: 'active'
+                });
+                users.push({
+                    id: 'student002',
+                    fullName: 'محمد علي',
+                    email: 'mohamed@student.com',
+                    password: '123456',
+                    role: 'student',
+                    createdAt: new Date().toISOString(),
+                    status: 'active'
+                });
+
+                // Add sample teachers (approved)
+                users.push({
+                    id: 'teacher001',
+                    fullName: 'أ/ أحمد سرور',
+                    email: 'ahmed@teacher.com',
+                    password: '123456',
+                    role: 'teacher',
+                    subject: 'رياضيات',
+                    approved: true,
+                    status: 'active',
+                    region: 'cairo',
+                    regionName: 'القاهرة',
+                    year: 'first',
+                    branch: 'scientific',
+                    experience: 'خبرة 15 سنة',
+                    rating: 4.9,
+                    students: 940,
+                    videos: [
+                        {title: "تقسيم قطعة مستقيمة", embed: "https://www.youtube.com/embed/ARZjVbVFn1w"},
+                        {title: "مراجعة حساب مثلثات", embed: "https://www.youtube.com/embed/HpVsGw3O0dQ"}
+                    ],
+                    createdAt: new Date().toISOString()
+                });
+
+                users.push({
+                    id: 'teacher002',
+                    fullName: 'أ/ محمد عبدالمعبود',
+                    email: 'mohamed@teacher.com',
+                    password: '123456',
+                    role: 'teacher',
+                    subject: 'فيزياء',
+                    approved: true,
+                    status: 'active',
+                    region: 'alex',
+                    regionName: 'الإسكندرية',
+                    year: 'first',
+                    branch: 'scientific',
+                    experience: 'خبرة 12 سنة',
+                    rating: 4.8,
+                    students: 1350,
+                    videos: [
+                        {title: "First Physics Lecture", embed: "https://www.youtube.com/embed/9xnaMi44J6U"}
+                    ],
+                    createdAt: new Date().toISOString()
+                });
+
+                // Add pending teacher
+                users.push({
+                    id: 'teacher003',
+                    fullName: 'د/ سامح إبراهيم',
+                    email: 'sameh@teacher.com',
+                    password: '123456',
+                    role: 'teacher',
+                    subject: 'كيمياء',
+                    approved: false,
+                    status: 'pending',
+                    region: 'online',
+                    regionName: 'أونلاين',
+                    year: 'first',
+                    branch: 'scientific',
+                    experience: 'خبرة 10 سنوات',
+                    rating: 0,
+                    students: 0,
+                    videos: [],
+                    createdAt: new Date().toISOString()
+                });
+
+                DB.saveUsers(users);
+
+                // Save approved teachers to teachers collection
+                const teachers = users.filter(u => u.role === 'teacher');
+                DB.saveTeachers(teachers);
+            }
+        }
+
+        // Initialize data on first load
+        initData();
 
         let currentUser = null, userRole = null, userData = null;
 
@@ -211,43 +326,12 @@
         }
 
         function checkAuth() {
-            // Check if admin auto-login is enabled
-            const adminAuto = localStorage.getItem('adminAuto');
-            if (adminAuto === 'true') {
-                const adminUser = {
-                    id: 'admin001',
-                    fullName: 'مدير المنصة',
-                    email: 'admin@thawra.edu',
-                    role: 'admin',
-                    createdAt: new Date().toISOString(),
-                    status: 'active'
-                };
-                DB.setCurrentUser(adminUser);
-                currentUser = adminUser;
-                userRole = 'admin';
-                userData = adminUser;
-                showPage('app');
-                loadDashboard();
-                return;
-            }
-
             const user = DB.getCurrentUser();
             if (user) { currentUser = user; userRole = user.role; userData = user; showPage('app'); loadDashboard(); }
             else showPage('login');
         }
 
-        // Auto-login as admin (for development)
-        function loginAsAdmin() {
-            localStorage.setItem('adminAuto', 'true');
-            checkAuth();
-        }
-
-        // Disable admin auto-login
-        function logoutAdmin() {
-            localStorage.removeItem('adminAuto');
-            logout();
-        }
-
+        // ==================== LOGIN ====================
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const btn = document.getElementById('btnLogin'), loading = document.getElementById('loginLoading'), error = document.getElementById('loginError');
@@ -258,6 +342,14 @@
             else { error.textContent = 'البريد أو كلمة المرور غير صحيحة'; error.style.display = 'block'; btn.disabled = false; loading.style.display = 'none'; }
         });
 
+        // ==================== ADMIN LOGIN ====================
+        function loginAsAdmin() {
+            document.getElementById('loginEmail').value = 'admin@thawra.edu';
+            document.getElementById('loginPassword').value = 'mostafa@123';
+            document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+        }
+
+        // ==================== REGISTER ====================
         document.getElementById('regRole').addEventListener('change', function() {
             document.getElementById('teacherFields').classList.toggle('hidden', this.value !== 'teacher');
         });
@@ -270,7 +362,11 @@
             const users = DB.getUsers();
             if (users.find(u => u.email === email)) { error.textContent = 'البريد الإلكتروني مستخدم بالفعل'; error.style.display = 'block'; btn.disabled = false; loading.style.display = 'none'; return; }
             const newUser = { id: Date.now().toString(), fullName: document.getElementById('regName').value, email, password, role, createdAt: new Date().toISOString(), status: role === 'teacher' ? 'pending' : 'active' };
-            if (role === 'teacher') { newUser.subject = document.getElementById('regSubject').value; newUser.approved = false; newUser.rating = 0; newUser.students = 0; newUser.experience = ''; newUser.videos = []; newUser.region = 'cairo'; newUser.regionName = 'القاهرة'; newUser.year = 'first'; newUser.branch = 'scientific'; }
+            if (role === 'teacher') {
+                newUser.subject = document.getElementById('regSubject').value;
+                newUser.approved = false; newUser.rating = 0; newUser.students = 0; newUser.experience = ''; newUser.videos = [];
+                newUser.region = 'cairo'; newUser.regionName = 'القاهرة'; newUser.year = 'first'; newUser.branch = 'scientific';
+            }
             users.push(newUser); DB.saveUsers(users);
             if (role === 'teacher') { const teachers = DB.getTeachers(); teachers.push(newUser); DB.saveTeachers(teachers); }
             success.textContent = role === 'teacher' ? 'تم إنشاء الحساب! بانتظار موافقة الأدمن...' : 'تم إنشاء الحساب بنجاح!';
@@ -278,7 +374,7 @@
             setTimeout(() => showPage('login'), 2000);
         });
 
-        function logout() { localStorage.removeItem('adminAuto'); DB.clearCurrentUser(); currentUser = null; userRole = null; userData = null; showPage('login'); }
+        function logout() { DB.clearCurrentUser(); currentUser = null; userRole = null; userData = null; showPage('login'); }
 
         function loadDashboard() {
             document.getElementById('userName').textContent = userData.fullName || 'مستخدم';
@@ -291,6 +387,7 @@
             else loadStudentDashboard(content);
         }
 
+        // ==================== STUDENT ====================
         function loadStudentDashboard(container) {
             container.innerHTML = `
                 <div class="welcome"><h2>👋 أهلاً بيك، ${userData.fullName}!</h2><p>اختار بياناتك واكتشف أفضل المدرسين</p></div>
@@ -318,7 +415,7 @@
                         <div class="teacher-header"><div class="teacher-name">${t.fullName}</div><div class="teacher-subject">${t.subject}</div><div class="teacher-rating">⭐ ${t.rating || 0}</div></div>
                         <div class="teacher-body">
                             <div class="teacher-info">📍 ${t.regionName || t.region}</div>
-                            <div class="teacher-info">⏱️ خبرة ${t.experience || '-'}</div>
+                            <div class="teacher-info">⏱️ ${t.experience || '-'}</div>
                             <div class="teacher-info">👥 ${t.students || 0}K مشترك</div>
                             <button class="btn-videos" onclick="event.stopPropagation(); showTeacherVideos('${t.id}', '${t.fullName}', '${t.subject}')">🎬 مشاهدة الفيديوهات</button>
                         </div>
@@ -336,11 +433,12 @@
             container.classList.add('active');
         }
 
+        // ==================== TEACHER ====================
         function loadTeacherDashboard(container) {
             const isPending = !userData.approved;
             container.innerHTML = `
                 <div class="welcome"><h2>👋 أهلاً بيك، ${userData.fullName}!</h2><p>إدارة بياناتك والفيديوهات</p>${isPending ? '<span class="status-badge status-pending">⏳ بانتظار الموافقة</span>' : '<span class="status-badge status-active">✅ حساب معتمد</span>'}</div>
-                ${isPending ? '<div class="alert alert-warning">حسابك بانتظار موافقة الأدمن. لن تظهر في نتائج البحث حتى يتم الموافقة.</div>' : ''}
+                ${isPending ? '<div class="alert alert-warning">حسابك بانتظار موافقة الأدmin. لن تظهر في نتائج البحث حتى يتم الموافقة.</div>' : ''}
                 <div class="stats-grid"><div class="stat-card"><div class="value" id="tVideoCount">0</div><div class="label">فيديوهات</div></div><div class="stat-card"><div class="value" id="tRating">0</div><div class="label">التقييم</div></div></div>
                 <div class="section-card"><h3>👤 بياناتي</h3>
                     <form id="teacherProfileForm">
@@ -416,6 +514,7 @@
             if (teacherIndex > -1) { teachers[teacherIndex].videos.splice(index, 1); DB.saveTeachers(teachers); loadTeacherVideos(); }
         }
 
+        // ==================== ADMIN ====================
         function loadAdminDashboard(container) {
             container.innerHTML = `
                 <div class="welcome"><h2>⚙️ لوحة التحكم</h2><p>إدارة المنصة بالكامل</p><span class="status-badge status-admin">أدمن</span></div>
@@ -489,7 +588,7 @@
 
         checkAuth();
         console.log('%cمنصة ثورة تعليمية','font-size:24px;font-weight:bold;color:#1a237e');
-        console.log('%cLocal Database - مش محتاج Firebase','font-size:14px;color:#666');
+        console.log('%cLocal Database - بيانات أولية جاهزة','font-size:14px;color:#666');
     </script>
 </body>
 </html>
