@@ -365,7 +365,12 @@
 
         // ==================== ADMIN LOGIN ====================
         function loginAsAdmin() {
+            // Force init data
+            initData();
+
             const users = DB.getUsers();
+            console.log('All users after init:', users);
+
             const admin = users.find(u => u.email === 'admin@thawra.edu');
             if (admin) {
                 DB.setCurrentUser(admin);
@@ -375,7 +380,7 @@
                 showPage('app');
                 loadDashboard();
             } else {
-                alert('الأدمن مش موجود! اعمل refresh للصفحة');
+                alert('خطأ: الأدمن مش موجود! المستخدمين: ' + users.length);
             }
         }
 
