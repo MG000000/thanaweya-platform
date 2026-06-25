@@ -63,8 +63,7 @@
         .videos-section{display:none;background:var(--card);border-radius:var(--r);padding:25px;margin-top:20px;box-shadow:var(--shadow)}
         .videos-section.active{display:block}
         .videos-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
-        .btn-close{background:var(--danger);color:#fff;border:none;padding:8px 16px;border-radius:var(--rs);cursor:pointer;font-family:'Cairo',sans-serif
-    }
+        .btn-close{background:var(--danger);color:#fff;border:none;padding:8px 16px;border-radius:var(--rs);cursor:pointer;font-family:'Cairo',sans-serif}
         .videos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
         .video-card{border-radius:var(--rs);overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
         .video-wrapper{position:relative;padding-bottom:56.25%;height:0;background:#000}
@@ -315,6 +314,10 @@
         // Initialize data on first load
         initData();
 
+        // Debug: log current data
+        console.log('Users:', DB.getUsers());
+        console.log('Teachers:', DB.getTeachers());
+
         let currentUser = null, userRole = null, userData = null;
 
         function showPage(page) {
@@ -344,9 +347,18 @@
 
         // ==================== ADMIN LOGIN ====================
         function loginAsAdmin() {
-            document.getElementById('loginEmail').value = 'admin@thawra.edu';
-            document.getElementById('loginPassword').value = 'mostafa@123';
-            document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+            const users = DB.getUsers();
+            const admin = users.find(u => u.email === 'admin@thawra.edu');
+            if (admin) {
+                DB.setCurrentUser(admin);
+                currentUser = admin;
+                userRole = admin.role;
+                userData = admin;
+                showPage('app');
+                loadDashboard();
+            } else {
+                alert('الأدمن مش موجود! اعمل refresh للصفحة');
+            }
         }
 
         // ==================== REGISTER ====================
